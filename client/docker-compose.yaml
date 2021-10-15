@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  pymongo-client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: "${IMAGE_NAME}:${IMAGE_VERSION}"
+    tty: true
+    restart: always
+    container_name: "${IMAGE_NAME}_${IMAGE_VERSION}"
+    env_file:
+      - .env
