@@ -13,7 +13,8 @@ origin = {'x': -400, 'y': -400}
 
 
 if __name__ == "__main__":
-    img_dir = '/home/cha/py-mongo/client/resources/cubetown_white.png'
+    root_dir = "/home/cha/simulation-client/client/resources"
+    img_dir = f"{root_dir}/cubtwon_post_processing.png"
 
     # create plot
     p = figure(title="cube town", x_axis_label='x', y_axis_label='y')
@@ -22,16 +23,21 @@ if __name__ == "__main__":
     p.image_url(url=[img_dir], x=[origin['x']], y=[origin['y']], w=[W], h=[H], anchor="bottom_left")
     curdoc().add_root(p)
 
+    trans_factor = (20, -270)
+    scale_factor = 8
+
     # draw vehicle
     frame = 0
-    p.circle(0, -400, legend_label='vehicle', line_color= "green", fill_color="green", size=5)
+    p.circle(vehicle[0][0] + trans_factor[0], vehicle[0][1] + trans_factor[1], legend_label='vehicle', line_color= "green", fill_color="green", size=5)
 
     # draw obstacle
     num, _, _ = np.shape(obstacle[frame])
     colors = itertools.cycle(palette)
+
+    trans_mat = np.array([trans_factor[1], trans_factor[1], trans_factor[1], trans_factor[1]])
     for n, color in zip(range(num), colors):
-        xs = obstacle[frame][n, :, 0] * 8
-        ys = obstacle[frame][n, :, 1] * 8
+        xs = obstacle[frame][n, :, 0] * scale_factor 
+        ys = obstacle[frame][n, :, 1] * scale_factor + trans_mat
         p.multi_polygons(xs=[[[xs]]], 
                          ys=[[[ys]]], 
                          legend_label='obstacle', line_color= 'blue', fill_color='blue')

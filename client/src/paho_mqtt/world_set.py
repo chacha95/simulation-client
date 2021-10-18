@@ -3,8 +3,8 @@ class WorldSet:
     port: int
     longitude: float
     latitude: float 
-    x_0: float = 587054.3161
-    y_0: float = 4141607.7783
+    x_0: float = 592759.1186
+    y_0: float = 4134482.1499
 
     @property
     @classmethod
