@@ -1,18 +1,30 @@
-from bokeh.io import curdoc
-from bokeh.plotting import figure, show
+import sys
+import os
+root_dir = os.getcwd()
+sys.path.insert(1, root_dir)
+
+from bokeh.models import ColumnDataSource, CustomJS, Slider
+from bokeh.plotting import figure, show, output_file
 from bokeh.palettes import Dark2_5 as palette
 from data import obstacle, vehicle
+from bokeh.io import curdoc
 
 import itertools  
 import numpy as np
 
 
 if __name__ == "__main__":
-    root_dir = "/home/cha/simulation-client/client/resources"
-    img_dir = f"{root_dir}/cubtwon_post_processing.png"
+    img_dir = "client/resources/cubetown_post_processing.png"
+    out_dir = "client/resources/cubetown.html"
+    output_file(filename=out_dir, title="static HTML file")
 
     # create plot
-    p = figure(title="cube town", x_axis_label='x', y_axis_label='y')
+    p = figure(
+        title="cube town",
+        sizing_mode="stretch_width",
+        x_axis_label='x', 
+        y_axis_label='y'
+    )
 
     # draw image
     H = W = 800

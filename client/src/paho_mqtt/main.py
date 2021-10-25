@@ -4,8 +4,8 @@ from typing import List
 from world_set import WorldSet
 from data import Vehicle, Obstacle
 
-import numpy as np
 import paho.mqtt.client as mqtt
+import numpy as np
 import json
 
 
