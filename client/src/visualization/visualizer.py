@@ -21,7 +21,6 @@ if __name__ == "__main__":
     # create plot
     p = figure(
         title="cube town",
-        sizing_mode="stretch_width",
         x_axis_label='x', 
         y_axis_label='y'
     )
@@ -31,14 +30,12 @@ if __name__ == "__main__":
     origin = {'x': -400, 'y': -400}
     p.image_url(url=[img_dir], x=[origin['x']], y=[origin['y']], w=[W], h=[H], anchor="bottom_left")
     curdoc().add_root(p)
+    
 
     trans_factor = (20, -270)
     scale_factor = 20
 
-    # draw vehicle
     frame = 0
-    p.circle(vehicle[0][0] + trans_factor[0], vehicle[0][1] + trans_factor[1], legend_label='vehicle', line_color= "green", fill_color="green", size=5)
-
     # draw obstacle
     num, _, _ = np.shape(obstacle[frame])
     colors = itertools.cycle(palette)   
