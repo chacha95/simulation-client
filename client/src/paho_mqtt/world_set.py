@@ -1,50 +1,67 @@
 from typing import List
 
-class WorldSet:
-    host: str 
-    port: int
-    x_0: float
-    y_0: float 
-    longitude: float
-    latitude: float 
-    topic: List[str]
 
-    @property
+class WorldSet:
+    _host: str
+    _port: int
+    _x_0: float
+    _y_0: float
+    _longitude: float
+    _latitude: float
+    _topic: List[str]
+
     @classmethod
-    def host(cls):
-        return cls.host
-    
-    @host.setter
+    def get_host(cls):
+        return cls._host
+
     @classmethod
-    def host(cls, host):
-        cls.host = host
-    
-    @property
+    def set_host(cls, host: str):
+        cls._host = host
+
     @classmethod
-    def port(cls):
-        return cls.port
-    
-    @port.setter
+    def get_port(cls):
+        return cls._port
+
     @classmethod
-    def port(cls, port):
-        cls.port = port
-    
-    @property
+    def set_port(cls, port: int):
+        cls._port = port
+
     @classmethod
-    def longitude(cls):
-        return cls.longitude
-    
-    @longitude.setter
+    def get_x_0(cls):
+        return cls._x_0
+
     @classmethod
-    def longitude(cls, longitude):
-        cls.longitude = longitude
-    
-    @property
+    def set_x_0(cls, x_0: float):
+        cls._x_0 = x_0
+
     @classmethod
-    def latitude(cls):
-        return cls.latitude
-    
-    @latitude.setter
+    def get_y_0(cls):
+        return cls._y_0
+
     @classmethod
-    def latitude(cls, latitude):
-        cls.latitude = latitude
+    def set_y_0(cls, y_0: float):
+        cls._y_0 = y_0
+
+    @classmethod
+    def get_longitude(cls):
+        return cls._longitude
+
+    @classmethod
+    def set_longitude(cls, longitude: float):
+        cls._longitude = longitude
+
+    @classmethod
+    def get_latitude(cls):
+        return cls._latitude
+
+    @classmethod
+    def set_latitude(cls, latitude: float):
+        cls._latitude = latitude
+
+    @classmethod
+    def get_topic(cls):
+        return cls._topic
+
+    @classmethod
+    def set_topic(cls, topic: List[str]):
+        cls._topic = topic
