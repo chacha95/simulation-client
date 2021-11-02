@@ -5,8 +5,8 @@ paho mqtt main function
 from visualization.bokeh_visualizer import show_map
 from typing import List
 
-from data_structure.world_set import WorldSet
-from data_structure.data import CustomQueue, DrawMapInfo, LGSVLMqttInfo
+from scheme.mqtt import WorldSet
+from scheme.mqtt import CustomQueue, DrawMapInfo, LGSVLMqttInfo
 
 import paho.mqtt.client as mqtt
 import numpy as np
@@ -75,9 +75,9 @@ class LGSVLMqtt(Mqtt):
         try:
             if topic == "/apollo/sensor/gnss/odometry":
                 x = payload["localization"]["position"]["x"] - \
-                    self.world_set.get_x_0()
+                    self.world_set.x_0
                 y = payload["localization"]["position"]["y"] - \
-                    self.world_set.get_y_0()
+                    self.world_set.y_0
                 v_pos = np.array([x, y])
                 self.vehicle_que.push(v_pos)
             elif topic == "/apollo/perception/obstacles":
@@ -86,8 +86,8 @@ class LGSVLMqtt(Mqtt):
                 for obstacle in obstacles:
                     poly_pos = np.zeros((0, 2))
                     for pp in obstacle["polygonPoint"]:
-                        x = pp["x"] - self.world_set.get_x_0()
-                        y = pp["y"] - self.world_set.get_y_0()
+                        x = pp["x"] - self.world_set.x_0
+                        y = pp["y"] - self.world_set.y_0
                         poly_pos = np.vstack((poly_pos, [x, y]))
                     polygons.append(poly_pos)
                 self.obstacle_que.push(np.array(polygons))

@@ -2,12 +2,10 @@ from bokeh.models import ColumnDataSource, ImageURL
 from bokeh.palettes import Dark2_5 as palette
 from bokeh.plotting import figure, output_file, show
 
-from data_structure.translation_scale import TransScale
-from data_structure.data import DrawMapInfo
+from scheme.mqtt import DrawMapInfo
 
 import numpy as np
 import itertools
-import cv2
 
 
 def init_map_info(img_dir: str, H: int, W: int) -> ColumnDataSource:
@@ -36,8 +34,8 @@ def draw_map(draw_map_info: DrawMapInfo,
     plot.add_glyph(map_info, map_img)
 
     # draw vehicle
-    plot.circle(vehicle[0] + trans_scale.get_trans_factor_x(),
-                vehicle[1] + trans_scale.get_trans_factor_y(),
+    plot.circle(vehicle[0] + trans_scale.trans_factor_x,
+                vehicle[1] + trans_scale.trans_factor_y,
                 legend_label='vehicle',
                 line_color="green",
                 fill_color="green", size=5)
@@ -46,13 +44,13 @@ def draw_map(draw_map_info: DrawMapInfo,
     num, _, _ = np.shape(obstacle)
     colors = itertools.cycle(palette)
 
-    trans_x = np.array([trans_scale.get_trans_factor_x()] * 4)
-    trans_y = np.array([trans_scale.get_trans_factor_y()] * 4)
+    trans_x = np.array([trans_scale.trans_factor_x] * 4)
+    trans_y = np.array([trans_scale.trans_factor_y] * 4)
     for n, color in zip(range(num), colors):
         xs = obstacle[n, :, 0] * \
-            trans_scale.get_scale_factor() + trans_x
+            trans_scale.scale_factor + trans_x
         ys = obstacle[n, :, 1] * \
-            trans_scale.get_scale_factor() + trans_y
+            trans_scale.scale_factor + trans_y
         plot.multi_polygons(
             xs=[[[xs]]],
             ys=[[[ys]]],
