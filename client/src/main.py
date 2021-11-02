@@ -1,5 +1,6 @@
-from visualization.bokeh_visualizer import TransScale, show_map, init_map_info, figure
-from python_mqtt.world_set import WorldSet
+from visualization.bokeh_visualizer import TransScale, init_map_info, figure
+from data_structure.world_set import WorldSet
+from data_structure.data import LGSVLMqttInfo
 from python_mqtt.mqtt import LGSVLMqtt
 
 import numpy as np
@@ -14,14 +15,8 @@ sys.path.append(root_dir)
 if __name__ == "__main__":
     # LGSVL
     world_set = WorldSet()
-    world_set.set_host("192.168.10.145")
-    world_set.set_port(1883)
     world_set.set_x_0(592759.1186)
     world_set.set_y_0(4134482.1499)
-    world_set.set_topic(
-        [("/apollo/sensor/gnss/odometry/#", 0),
-         ("/apollo/perception/obstacles/#", 0)]
-    )
 
     # bokeh visualizer
     root_dir = "/home/cha/simulation-client"
@@ -32,7 +27,7 @@ if __name__ == "__main__":
     trans_scale.set_map_margin(100)
     trans_scale.set_trans_factor_x(30)
     trans_scale.set_trans_factor_y(-350)
-    trans_scale.set_scale_factor(8)
+    trans_scale.set_scale_factor(10)
 
     # read map image
     img = cv2.imread(img_dir)
@@ -54,16 +49,20 @@ if __name__ == "__main__":
         ),
     )
 
-    lg_mqtt = LGSVLMqtt(
-        topic=world_set.get_topic(),
-        address=world_set.get_host(),
-        port=world_set.get_port(),
-        world_set=world_set,
-        plot=plot,
-        map_info=map_info,
-        out_dir=out_dir,
-        img_dir=img_dir,
-        trans_scale=trans_scale
-    )
+    lgsvlmqtt_data = {
+        'topic': [("/apollo/sensor/gnss/odometry/#", 0),
+                  ("/apollo/perception/obstacles/#", 0)],
+        'address': "192.168.10.145",
+        'port': 1883,
+        'world_set': world_set,
+        'plot': plot,
+        'map_info': map_info,
+        'out_dir': out_dir,
+        'img_dir': img_dir,
+        'trans_scale': trans_scale
+    }
 
+    lgsvl_mqtt_info = LGSVLMqttInfo(**lgsvlmqtt_data)
+
+    lg_mqtt = LGSVLMqtt(lgsvl_mqtt_info)
     lg_mqtt()

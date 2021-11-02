@@ -2,41 +2,12 @@ from bokeh.models import ColumnDataSource, ImageURL
 from bokeh.palettes import Dark2_5 as palette
 from bokeh.plotting import figure, output_file, show
 
+from data_structure.translation_scale import TransScale
+from data_structure.data import DrawMapInfo
+
 import numpy as np
 import itertools
 import cv2
-
-
-class TransScale:
-    def __init__(self) -> None:
-        self.map_margin: int
-        self.trans_factor_x: int
-        self.trans_factor_y: int
-        self.scale_factor: int
-
-    def get_map_margin(self) -> int:
-        return self.map_margin
-
-    def set_map_margin(self, map_margin: int):
-        self.map_margin = map_margin
-
-    def get_trans_factor_x(self) -> int:
-        return self.trans_factor_x
-
-    def set_trans_factor_x(self, trans_factor_x: int):
-        self.trans_factor_x = trans_factor_x
-
-    def get_trans_factor_y(self) -> int:
-        return self.trans_factor_y
-
-    def set_trans_factor_y(self, trans_factor_y: int):
-        self.trans_factor_y = trans_factor_y
-
-    def get_scale_factor(self) -> int:
-        return self.scale_factor
-
-    def set_scale_factor(self, scale_factor: int):
-        self.scale_factor = scale_factor
 
 
 def init_map_info(img_dir: str, H: int, W: int) -> ColumnDataSource:
@@ -51,12 +22,13 @@ def init_map_info(img_dir: str, H: int, W: int) -> ColumnDataSource:
     )
 
 
-def draw_map(vehicle,
-             obstacle,
-             plot: figure,
-             map_info: ColumnDataSource(dict()),
-             trans_scale: TransScale,
-             ) -> figure:
+def draw_map(draw_map_info: DrawMapInfo,
+             vehicle: np.array,
+             obstacle: np.array) -> figure:
+    plot = draw_map_info.plot
+    map_info = draw_map_info.map_info
+    trans_scale = draw_map_info.trans_scale
+
     # draw image
     map_img = ImageURL(
         url="url", x="origin_x", y="origin_y", w="W", h="H", anchor="bottom_left"
@@ -92,17 +64,11 @@ def draw_map(vehicle,
     return plot
 
 
-def show_map(plot,
-             map_info,
-             vehicle_que,
-             obstacle_que,
-             out_dir: str,
-             img_dir: str,
-             trans_scale: TransScale) -> None:
-    output_file(filename=out_dir, title="static HTML file")
+def show_map(draw_map_info: DrawMapInfo) -> None:
+    output_file(filename=draw_map_info.out_dir, title="static HTML file")
 
-    vehicle = vehicle_que.pop()
-    obstacle = obstacle_que.pop()
+    vehicle = draw_map_info.vehicle_que.pop()
+    obstacle = draw_map_info.obstacle_que.pop()
 
-    plot = draw_map(vehicle, obstacle, plot, map_info, trans_scale)
+    plot = draw_map(draw_map_info, vehicle, obstacle)
     show(plot)

@@ -1,4 +1,13 @@
+from typing import List, Optional
+from pydantic import BaseModel
 from collections import deque
+
+from bokeh.models import ColumnDataSource
+from bokeh.plotting import figure
+
+from translation_scale import TransScale
+from world_set import WorldSet
+
 import sys
 
 
@@ -20,3 +29,26 @@ class CustomQueue:
             print("[queue empty error]")
             sys.exit()
         return self.que.popleft()
+
+
+class LGSVLMqttInfo(BaseModel):
+    topic: List[str]
+    address: str = "localhost"
+    port: int = 1883
+    world_set: WorldSet = None
+    plot: figure = None
+    map_info: ColumnDataSource(dict()) = None
+    out_dir: str = None
+    img_dir: str = None
+    trans_scale: TransScale = None
+    history: int = 10
+
+
+class DrawMapInfo(BaseModel):
+    vehicle_que: CustomQueue
+    obstacle_que: CustomQueue
+    plot: figure
+    map_info: ColumnDataSource(dict())
+    trans_scale: TransScale
+    out_dir: str
+    img_dir: str

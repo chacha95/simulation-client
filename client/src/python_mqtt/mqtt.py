@@ -2,10 +2,11 @@
 paho mqtt main function
 """
 
-from python_mqtt.world_set import WorldSet
-from data_structure.data import CustomQueue
 from visualization.bokeh_visualizer import show_map
 from typing import List
+
+from data_structure.world_set import WorldSet
+from data_structure.data import CustomQueue, DrawMapInfo, LGSVLMqttInfo
 
 import paho.mqtt.client as mqtt
 import numpy as np
@@ -36,30 +37,20 @@ class Mqtt:
 
 
 class LGSVLMqtt(Mqtt):
-    def __init__(
-        self,
-        topic: List[str],
-        address: str = "localhost",
-        port: int = 1883,
-        world_set: WorldSet = None,
-        plot=None,
-        map_info=None,
-        out_dir=None,
-        img_dir=None,
-        trans_scale=None,
-        history: int = 10,
-    ) -> None:
-        super(LGSVLMqtt, self).__init__(topic, address, port)
+    def __init__(self, lgsvl_info: LGSVLMqttInfo) -> None:
+        super(LGSVLMqtt, self).__init__(lgsvl_info.topic,
+                                        lgsvl_info.address,
+                                        lgsvl_info.port)
 
         self.vehicle_que = CustomQueue(100)
         self.obstacle_que = CustomQueue(100)
 
-        self.world_set: WorldSet = world_set
-        self.plot = plot
-        self.map_info = map_info
-        self.out_dir = out_dir
-        self.img_dir = img_dir
-        self.trans_scale = trans_scale
+        self.world_set: WorldSet = lgsvl_info.world_set
+        self.plot = lgsvl_info.plot
+        self.map_info = lgsvl_info.map_info
+        self.out_dir = lgsvl_info.out_dir
+        self.img_dir = lgsvl_info.img_dir
+        self.trans_scale = lgsvl_info.trans_scale
 
     def on_message(self, client, userdata, msg) -> None:
         topic = msg.topic
@@ -67,10 +58,18 @@ class LGSVLMqtt(Mqtt):
         payload["topic"] = topic
         self.parse_data(topic, payload)
 
-        time.sleep(0.2)
         if len(self.vehicle_que) != 0 and len(self.obstacle_que) != 0:
-            show_map(self.plot, self.map_info, self.vehicle_que, self.obstacle_que,
-                     self.out_dir, self.img_dir, self.trans_scale)
+            draw_map_data = {
+                'vehicle_que': self.vehicle_que,
+                'obstacle_que': self.obstacle_que,
+                'plot': self.plot,
+                'map_info': self.map_info,
+                'trans_scale': self.trans_scale,
+                'out_dir': self.out_dir,
+                'img_dir': self.img_dir,
+            }
+            draw_map_info = DrawMapInfo(**draw_map_data)
+            show_map(draw_map_info)
 
     def parse_data(self, topic: str, payload: dict) -> None:
         try:
