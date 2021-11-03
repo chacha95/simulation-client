@@ -9,7 +9,7 @@ def rot_mat(degree: int) -> np.ndarray:
         degree: degree, e.g. 90
 
     Return:
-        (2, 2) numpy rotation matrix
+        shape (2,2) numpy rotation matrix
     """
     theta = np.radians(degree)
     c, s = np.cos(theta), np.sin(theta)

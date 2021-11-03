@@ -24,15 +24,6 @@ def init_bokeh() -> Any:
     init bokeh information.
     this function can control visualization factors(about bokeh)
     """
-    # translation info
-    trans_scale_data = {
-        "map_margin": 100,
-        "trans_factor_x": 32,
-        "trans_factor_y": -373,
-        "scale_factor": 9.5,
-        "rot_mat": rot_mat(-90),
-    }
-    trans_scale = TransScale(**trans_scale_data)
 
     # map info
     root_dir = "/home/cha/simulation-client"
@@ -42,18 +33,28 @@ def init_bokeh() -> Any:
     h, w, _ = np.shape(img)
     map_info = init_map_info(img_dir, h, w)
 
+    # translation info
+    trans_scale_data = {
+        "map_margin": 100,
+        "trans_factor_x": 32 + w // 2,
+        "trans_factor_y": -373 + h // 2,
+        "scale_factor": 9.5,
+        "rot_mat": rot_mat(-90),
+    }
+    trans_scale = TransScale(**trans_scale_data)
+
     # create plot
     plot = figure(
         title="cube town",
         x_axis_label="x",
         y_axis_label="y",
         x_range=(
-            -(w // 2 + trans_scale.map_margin),
-            (w // 2 + trans_scale.map_margin),
+            0,
+            (w + trans_scale.map_margin),
         ),
         y_range=(
-            -(h // 2 + trans_scale.map_margin),
-            (h // 2 + trans_scale.map_margin),
+            0,
+            (h + trans_scale.map_margin),
         ),
     )
 
