@@ -1,4 +1,5 @@
-from typing import List, Optional, Any, Union
+from typing import List, Optional, Any
+import numpy as np
 from pydantic import BaseModel
 from collections import deque
 
@@ -15,7 +16,7 @@ class CustomQueue:
     def __len__(self) -> int:
         return len(self.que)
 
-    def push(self, data: dict) -> None:
+    def push(self, data: Any) -> None:
         if len(self.que) == self.size:
             self.que.popleft()
         self.que.append(data)
@@ -38,7 +39,11 @@ class TransScale(BaseModel):
     map_margin: int = None
     trans_factor_x: int = None
     trans_factor_y: int = None
-    scale_factor: int = None
+    scale_factor: float = None
+    rot_mat: np.ndarray = None
+
+    class Config:
+        arbitrary_types_allowed = True
 
 
 class LGSVLMqttInfo(BaseModel):
