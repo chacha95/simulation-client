@@ -79,7 +79,11 @@ class LGSVLMqtt(Mqtt):
         payload["topic"] = topic
         self.parse_data(topic, payload)
 
-        if len(self.vehicle_que) != 0 and len(self.obstacle_que) != 0:
+        if (
+            len(self.vehicle_que) != 0
+            and len(self.obstacle_que) != 0
+            and len(self.vehicle_que) == len(self.obstacle_que)
+        ):
             draw_map_data = {
                 "vehicle_que": self.vehicle_que,
                 "obstacle_que": self.obstacle_que,

@@ -1,7 +1,6 @@
 """
 bokeh visualizer
 """
-from typing import Union, List
 import numpy as np
 
 from bokeh.plotting import figure, output_file, show
@@ -15,8 +14,8 @@ def init_map_info(img_dir: str, h: int, w: int) -> ColumnDataSource:
         dict(
             H=[h],
             W=[w],
-            origin_x=[-1 * w // 2],
-            origin_y=[-1 * h // 2],
+            origin_x=[0],
+            origin_y=[0],
             url=[img_dir],
         )
     )
@@ -75,7 +74,7 @@ def draw_map(
         ys = points[1, :]
 
         # draw id text
-        id_tag = Label(x=xs[0], y=ys[1], text=str(id), text_color="orange")
+        id_tag = Label(x=min(xs), y=max(ys), text=str(id), text_color="orange")
         plot.add_layout(id_tag)
 
         # draw polygon

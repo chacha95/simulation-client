@@ -36,8 +36,8 @@ def init_bokeh() -> Any:
     # translation info
     trans_scale_data = {
         "map_margin": 100,
-        "trans_factor_x": 32 + w,
-        "trans_factor_y": -373 + h,
+        "trans_factor_x": 32 + w // 2,
+        "trans_factor_y": -373 + h // 2,
         "scale_factor": 9.5,
         "rot_mat": rot_mat(-90),
     }
