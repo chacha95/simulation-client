@@ -1,7 +1,7 @@
 """
 this script is main script for mqtt subscriber and bokeh visualizer.
 """
-from typing import Any
+from typing import Any, List
 
 import sys
 import os
@@ -61,7 +61,7 @@ def init_bokeh() -> Any:
     return plot, map_info, out_dir, img_dir, trans_scale
 
 
-def init_env() -> dict():
+def init_env(topic: List[tuple], address: str, port: int) -> dict():
     """
     init environment settings.
     e.g. host, port ....
@@ -76,12 +76,9 @@ def init_env() -> dict():
     plot, map_info, out_dir, img_dir, trans_scale = init_bokeh()
 
     return {
-        "topic": [
-            ("/apollo/sensor/gnss/odometry/#", 0),
-            ("/apollo/perception/obstacles/#", 0),
-        ],
-        "address": "192.168.10.145",
-        "port": 1883,
+        "topic": topic,
+        "address": address,
+        "port": port,
         "world_set": world_set,
         "plot": plot,
         "map_info": map_info,
@@ -92,7 +89,14 @@ def init_env() -> dict():
 
 
 if __name__ == "__main__":
-    data = init_env()
+    topic = [
+        ("/apollo/sensor/gnss/odometry/#", 0),
+        ("/apollo/perception/obstacles/#", 0),
+    ]
+    address = "192.168.10.145"
+    port = 1883
+    data = init_env(topic, address, port)
     lgsvl_mqtt_info = LGSVLMqttInfo(**data)
+
     lg_mqtt = LGSVLMqtt(lgsvl_mqtt_info)
     lg_mqtt()
