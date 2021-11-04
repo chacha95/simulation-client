@@ -19,15 +19,12 @@ from utils.util import rot_mat
 sys.path.append(os.getcwd())
 
 
-def init_bokeh(root_dir: str) -> Any:
+def init_bokeh(out_dir: str, img_dir: str) -> Any:
     """
     init bokeh information.
     this function can control visualization factors(about bokeh)
     """
-
-    # map info
-    out_dir = f"{root_dir}/client/resources/cubetown.html"
-    img_dir = f"{root_dir}/client/resources/cubetown_real_resize.png"
+    # read image and map info
     img = cv2.imread(img_dir)
     h, w, _ = np.shape(img)
     map_info = init_map_info(img_dir, h, w)
@@ -57,10 +54,16 @@ def init_bokeh(root_dir: str) -> Any:
         ),
     )
 
-    return plot, map_info, out_dir, img_dir, trans_scale
+    return plot, map_info, trans_scale
 
 
-def init_env(topic: List[tuple], address: str, port: int, root_dir: str) -> dict():
+def init_env(
+    topic: List[tuple],
+    address: str,
+    port: int,
+    out_dir: str,
+    img_dir: str,
+) -> dict():
     """
     init environment settings.
     e.g. host, port ....
@@ -72,7 +75,7 @@ def init_env(topic: List[tuple], address: str, port: int, root_dir: str) -> dict
     }
     world_set = WorldSet(**world_set_data)
 
-    plot, map_info, out_dir, img_dir, trans_scale = init_bokeh(root_dir)
+    plot, map_info, trans_scale = init_bokeh(out_dir, img_dir)
 
     return {
         "topic": topic,
@@ -95,7 +98,9 @@ if __name__ == "__main__":
     address = "192.168.10.145"
     port = 1883
     root_dir = "/home/cha/simulation-client"
-    data = init_env(topic, address, port, root_dir)
+    out_dir = f"{root_dir}/client/resources/cubetown.html"
+    img_dir = f"{root_dir}/client/resources/cubetown_line.png"
+    data = init_env(topic, address, port, out_dir, img_dir)
     lgsvl_mqtt_info = LGSVLMqttInfo(**data)
 
     lg_mqtt = LGSVLMqtt(lgsvl_mqtt_info)

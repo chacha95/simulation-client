@@ -74,7 +74,7 @@ def draw_map(
         ys = points[1, :]
 
         # draw id text
-        id_tag = Label(x=min(xs), y=max(ys), text=str(id), text_color="orange")
+        id_tag = Label(x=min(xs), y=max(ys), text=str(id), text_color="black")
         plot.add_layout(id_tag)
 
         # draw polygon
