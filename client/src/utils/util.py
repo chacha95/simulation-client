@@ -3,7 +3,7 @@ import numpy as np
 
 def rot_mat(degree: int) -> np.ndarray:
     """
-    make (2, 2) rotation matrix
+    make (2,2) rotation matrix
 
     Args:
         degree: degree, e.g. 90

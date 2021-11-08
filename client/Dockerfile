@@ -17,6 +17,7 @@ WORKDIR /home/appuser
 
 RUN pip install bokeh
 RUN pip install zarr
+RUN pip install paho-mqtt
 
 RUN git clone https://github.com/chacha95/${REPO_NAME}
 WORKDIR /home/appuser/${REPO_NAME}

@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  pymongo-client:
+  simulation_client:
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,5 +9,7 @@ services:
     tty: true
     restart: always
     container_name: "${IMAGE_NAME}_${IMAGE_VERSION}"
+    ports:
+      - "${MQTT_PORT}:1883"
     env_file:
       - .env
